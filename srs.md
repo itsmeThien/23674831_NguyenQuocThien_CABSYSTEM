@@ -162,3 +162,22 @@ flowchart TD
 | **FR18** | Giám sát Vận hành | Hệ thống cung cấp giao diện cho Nhân viên vận hành theo dõi các chuyến đang diễn ra, trạng thái Tài xế và xử lý các chuyến gặp sự cố. |
 | **FR19** | Báo cáo & Thống kê | Hệ thống cung cấp báo cáo về số lượng chuyến, doanh thu, tỷ lệ hoàn thành/hủy chuyến và hiệu suất Tài xế. |
 | **FR20** | Phân quyền & Ghi Log | Hệ thống kiểm soát quyền truy cập theo vai trò và ghi nhận các thao tác quan trọng liên quan đến tài khoản, chuyến đi và thanh toán. |
+
+## Business Rules
+| ID | Tên Rule | Mô tả Chi tiết |
+| --- | --- | --- |
+| **BRULE01** | Trạng thái Tài xế | Tài xế chỉ được nhận chuyến khi đang ở trạng thái **Sẵn sàng (Available/Ready)**. |
+| **BRULE02** | Phân công Chuyến đi | Mỗi chuyến đi chỉ được phân công cho **một Tài xế tại một thời điểm**. |
+| **BRULE03** | Từ chối Chuyến đi | Khi Tài xế từ chối hoặc không phản hồi trong thời gian quy định, hệ thống phải tự động tìm và gửi yêu cầu cho Tài xế phù hợp tiếp theo. |
+| **BRULE04** | Tài xế đang thực hiện chuyến | Tài xế đang thực hiện một chuyến đi không được nhận thêm chuyến mới. |
+| **BRULE05** | Tính Cước phí | Cước phí phải được hệ thống tự động tính dựa trên **loại dịch vụ, quãng đường và các quy tắc giá hiện hành**. |
+| **BRULE06** | Hoàn thành Chuyến đi | Chuyến đi chỉ được chuyển sang trạng thái **Hoàn thành** khi Tài xế xác nhận đã kết thúc chuyến. |
+| **BRULE07** | Thanh toán Điện tử | Giao dịch thanh toán điện tử chỉ được ghi nhận là **thành công** khi Payment Gateway xác nhận giao dịch thành công. |
+| **BRULE08** | Thanh toán Tiền mặt | Với phương thức tiền mặt, Tài xế phải xác nhận đã nhận đủ số tiền trước khi hệ thống ghi nhận thanh toán hoàn tất. |
+| **BRULE09** | Đánh giá Chuyến đi | Khách hàng chỉ được đánh giá chuyến đi sau khi chuyến đi đã hoàn thành và mỗi chuyến chỉ được đánh giá một lần. |
+| **BRULE10** | Phân quyền Người dùng | Mỗi người dùng chỉ được thực hiện các chức năng tương ứng với vai trò được cấp: **Customer, Driver hoặc Operator**. |
+| **BRULE11** | Quản trị Hệ thống | Chỉ Nhân viên vận hành có quyền phù hợp mới được thực hiện các thao tác quản trị và xử lý sự cố chuyến đi. |
+| **BRULE12** | Ghi nhận Thay đổi | Các thay đổi quan trọng liên quan đến tài khoản, chuyến đi và thanh toán phải được hệ thống ghi log để phục vụ kiểm tra và truy vết. |
+| **BRULE13** | Thông báo Chuyến đi | Hệ thống phải gửi thông báo đến Khách hàng và Tài xế khi xảy ra các sự kiện quan trọng trong quá trình đặt và thực hiện chuyến đi. |
+| **BRULE14** | Không tìm thấy Tài xế | Nếu không còn Tài xế phù hợp, hệ thống phải thông báo cho Khách hàng và kết thúc yêu cầu đặt xe. |
+| **BRULE15** | Hủy Chuyến đi | Việc hủy chuyến phải được kiểm tra theo trạng thái hiện tại của chuyến và các quy định hủy chuyến của hệ thống. |
