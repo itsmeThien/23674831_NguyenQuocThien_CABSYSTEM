@@ -61,6 +61,7 @@ quadrantChart
 ## 5. Business Requirements
 
 | ID | Business Requirement | Description |
+
 | **BR01** | **Quản lý tài khoản và người dùng** | Hệ thống phải hỗ trợ đăng ký, đăng nhập và quản lý thông tin tài khoản của Khách hàng, Tài xế và Nhân viên vận hành. |
 
 | **BR02** | **Quản lý đặt xe** | Hệ thống phải cho phép Khách hàng tạo yêu cầu đặt xe bằng cách cung cấp điểm đón, điểm đến và phương thức thanh toán. |
