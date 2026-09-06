@@ -60,8 +60,6 @@ quadrantChart
 
 ## 5. Business Requirements (Yêu Cầu Nghiệp Vụ)
 
-Dưới đây là bảng **Business Requirements (BR)** chi tiết gồm 17 yêu cầu đã được chuyển sang định dạng bảng Markdown:
-
 | ID | Tên Yêu cầu | Mô tả Chi tiết |
 | --- | --- | --- |
 | **BR01** | Đăng ký & Quản lý Khách hàng | Hệ thống hỗ trợ Khách hàng đăng ký tài khoản, đăng nhập, cập nhật thông tin cá nhân và xem lịch sử các chuyến đi đã thực hiện. |
