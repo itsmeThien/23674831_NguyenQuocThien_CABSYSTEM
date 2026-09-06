@@ -1,7 +1,3 @@
----
-config:
-  layout: elk
----
 flowchart TB
     Customer["Khách hàng"]
     Driver["Tài xế"]
