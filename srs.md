@@ -140,25 +140,25 @@ flowchart TD
 
 ## 7. Functional Requirements
 
-| ID | Functional Requirement | Description |
-|---|---|---|
-| FR01 | Account Management | The system shall allow users to register, log in, log out, and update personal information. |
-| FR02 | User Authorization | The system shall provide role-based access for Customer, Driver, and Operator. |
-| FR03 | Ride Booking | The system shall allow customers to enter pickup and destination locations and request a ride. |
-| FR04 | Driver Location | The system shall determine and display the current location of customers and drivers using GPS. |
-| FR05 | Driver Matching | The system shall automatically find available drivers suitable for the ride request. |
-| FR06 | Driver Assignment | The system shall send a ride request to a suitable available driver. |
-| FR07 | Driver Response | The system shall record whether the driver accepts, rejects, or does not respond to the ride request. |
-| FR08 | Request Forwarding | The system shall forward the ride request to the next suitable driver when the current driver rejects or times out. |
-| FR09 | Ride Confirmation | The system shall confirm the ride and provide driver information to the customer after acceptance. |
-| FR10 | Trip Management | The system shall update the trip status throughout the ride process. |
-| FR11 | Real-time Tracking | The system shall allow customers to track the driver's location and ETA in real time. |
-| FR12 | Fare Calculation | The system shall automatically calculate the total fare according to current pricing rules. |
-| FR13 | Payment | The system shall support cash and electronic payment methods. |
-| FR14 | Payment Confirmation | The system shall record the payment status after a successful or failed transaction. |
-| FR15 | Notification | The system shall send notifications to customers and drivers for important ride events. |
-| FR16 | Rating | The system shall allow customers to rate and provide feedback after completing a ride. |
-| FR17 | Ride History | The system shall store and allow users to view their ride and payment history. |
-| FR18 | Operation Monitoring | The system shall allow operators to monitor active rides and handle ride-related issues. |
-| FR19 | Reporting | The system shall provide reports on revenue, rides, cancellations, and driver performance. |
-| FR20 | System Logging | The system shall record important activities related to accounts, rides, and payments. |
+| ID | Tên Yêu cầu | Mô tả Chi tiết |
+| --- | --- | --- |
+| **FR01** | Đăng ký & Đăng nhập | Hệ thống cho phép Khách hàng và Tài xế đăng ký tài khoản, đăng nhập, đăng xuất và cập nhật thông tin cá nhân. |
+| **FR02** | Quản lý Tài xế | Hệ thống cho phép Tài xế cập nhật thông tin hồ sơ, phương tiện và bật/tắt trạng thái sẵn sàng nhận chuyến. |
+| **FR03** | Tạo yêu cầu Đặt xe | Hệ thống cho phép Khách hàng nhập điểm đón, điểm đến, lựa chọn loại dịch vụ/loại xe và gửi yêu cầu đặt xe. |
+| **FR04** | Xác định Vị trí | Hệ thống thu thập và cập nhật vị trí GPS của Khách hàng và Tài xế để phục vụ việc đặt xe và theo dõi chuyến đi. |
+| **FR05** | Tìm kiếm Tài xế | Hệ thống tự động tìm kiếm Tài xế đang sẵn sàng và phù hợp với yêu cầu chuyến đi dựa trên vị trí và trạng thái hoạt động. |
+| **FR06** | Gửi yêu cầu nhận chuyến | Hệ thống gửi thông báo yêu cầu nhận chuyến đến Tài xế phù hợp và hiển thị thời gian chờ phản hồi. |
+| **FR07** | Xử lý phản hồi Tài xế | Hệ thống ghi nhận lựa chọn chấp nhận hoặc từ chối chuyến đi của Tài xế. |
+| **FR08** | Tự động chuyển tiếp chuyến | Khi Tài xế từ chối hoặc không phản hồi trong thời gian quy định, hệ thống tự động chuyển yêu cầu đến Tài xế phù hợp tiếp theo. |
+| **FR09** | Xác nhận Chuyến đi | Khi Tài xế chấp nhận, hệ thống xác nhận chuyến đi và gửi thông tin Tài xế cho Khách hàng. |
+| **FR10** | Cập nhật Trạng thái chuyến | Hệ thống cho phép Tài xế cập nhật trạng thái chuyến đi gồm: Đã đến điểm đón, Đã đón khách, Đang di chuyển và Hoàn thành. |
+| **FR11** | Theo dõi Chuyến đi | Hệ thống hiển thị vị trí Tài xế, trạng thái chuyến đi và ETA theo thời gian thực cho Khách hàng. |
+| **FR12** | Tính Cước phí | Hệ thống tự động tính tổng cước phí dựa trên loại dịch vụ và thông tin thực tế của chuyến đi. |
+| **FR13** | Thanh toán | Hệ thống hỗ trợ Khách hàng thanh toán bằng tiền mặt hoặc thanh toán điện tử thông qua Payment Gateway. |
+| **FR14** | Xử lý Thanh toán thất bại | Hệ thống thông báo kết quả giao dịch và cho phép thực hiện lại thanh toán hoặc chuyển sang phương thức tiền mặt khi giao dịch điện tử thất bại. |
+| **FR15** | Gửi Thông báo | Hệ thống tự động gửi Push/SMS thông báo cho Khách hàng và Tài xế tại các sự kiện quan trọng của chuyến đi. |
+| **FR16** | Đánh giá Dịch vụ | Hệ thống cho phép Khách hàng đánh giá và gửi nhận xét về chất lượng Tài xế sau khi chuyến đi hoàn thành. |
+| **FR17** | Quản lý Lịch sử | Hệ thống lưu trữ và cho phép Khách hàng xem lịch sử chuyến đi, thông tin thanh toán và đánh giá. |
+| **FR18** | Giám sát Vận hành | Hệ thống cung cấp giao diện cho Nhân viên vận hành theo dõi các chuyến đang diễn ra, trạng thái Tài xế và xử lý các chuyến gặp sự cố. |
+| **FR19** | Báo cáo & Thống kê | Hệ thống cung cấp báo cáo về số lượng chuyến, doanh thu, tỷ lệ hoàn thành/hủy chuyến và hiệu suất Tài xế. |
+| **FR20** | Phân quyền & Ghi Log | Hệ thống kiểm soát quyền truy cập theo vai trò và ghi nhận các thao tác quan trọng liên quan đến tài khoản, chuyến đi và thanh toán. |
