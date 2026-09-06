@@ -82,7 +82,7 @@ quadrantChart
 
 ## 6. Business Process Modeling (Mô hình hóa Quy trình Nghiệp vụ)
 
-### 6.1. Quy trình Đặt xe & Điều phối Tự động
+### 6.1. Quy trình Đặt xe và Phân công Tài xế
 
 ```mermaid
 sequenceDiagram
@@ -92,51 +92,73 @@ sequenceDiagram
     actor TX as Tài xế
 
     KH->>HT: Tạo yêu cầu đặt xe (Điểm đón, Điểm đến, Loại xe)
-    HT->>HT: Xác định tọa độ & Tìm kiếm tài xế gần nhất đang sẵn sàng
-    
+    HT->>HT: Xác định tọa độ
+    HT->>HT: Tìm kiếm tài xế gần nhất đang sẵn sàng
+
     alt Tìm thấy tài xế
-        HT->>TX: Gửi thông báo nhận chuyến (có đếm ngược thời gian)
+        HT->>TX: Gửi thông báo nhận chuyến (có đếm ngược)
+
         alt Tài xế chấp nhận
             TX-->>HT: Xác nhận nhận chuyến
-            HT-->>KH: Thông báo đặt xe thành công & Thông tin tài xế
-        else Tài xế từ chối / Hết thời gian phản hồi
+            HT-->>KH: Thông báo đặt xe thành công & thông tin tài xế
+        else Tài xế từ chối / Hết thời gian
             TX-->>HT: Từ chối / Timeout
-            HT->>HT: Tự động chuyển tiếp yêu cầu tới tài xế tiếp theo
+            HT->>HT: Chuyển yêu cầu tới tài xế tiếp theo
         end
+
     else Không tìm thấy tài xế
         HT-->>KH: Thông báo không tìm thấy tài xế phù hợp
     end
 ```
-### 6.2. Quy trình Thực hiện Chuyến đi & Thanh toán
-```
+
+### 6.2. Quy trình Thực hiện chuyến, Thanh toán và Đánh giá
+
+```mermaid
 sequenceDiagram
     autonumber
     actor KH as Khách hàng
     actor TX as Tài xế
     participant HT as Hệ thống CAB
-    participant TT as Cổng Thanh toán (Payment Gateway)
+    participant TT as Cổng Thanh toán
 
     TX->>HT: Cập nhật trạng thái "Đã đến điểm đón"
     HT-->>KH: Thông báo tài xế đã tới
-    TX->>HT: Cập nhật trạng thái "Đã đón khách / Đang di chuyển"
-    
-    loop Cập nhật thời gian thực
+
+    TX->>HT: Cập nhật "Đã đón khách / Đang di chuyển"
+
+    loop Cập nhật vị trí thời gian thực
         TX->>HT: Gửi tọa độ GPS hiện tại
-        HT-->>KH: Hiển thị vị trí tài xế & ETA trên bản đồ
+        HT-->>KH: Hiển thị vị trí tài xế & ETA
     end
 
     TX->>HT: Cập nhật "Hoàn thành chuyến đi"
-    HT->>HT: Tự động tính tổng cước phí chuyến đi
-    HT-->>KH: Thông báo cước phí & Phương thức thanh toán
+    HT->>HT: Tự động tính tổng cước phí
+    HT-->>KH: Thông báo cước phí & phương thức thanh toán
 
-    alt Thanh toán Điện tử
-        KH->>TT: Thực hiện thanh toán qua Cổng thanh toán
+    alt Thanh toán điện tử
+        KH->>TT: Thực hiện thanh toán
         TT-->>HT: Xác nhận thanh toán thành công
         HT-->>KH: Gửi hóa đơn điện tử
-    else Thanh toán Tiền mặt
-        KH->>TX: Trả tiền mặt trực tiếp
-        TX->>HT: Xác nhận đã nhận đủ tiền mặt
+    else Thanh toán tiền mặt
+        KH->>TX: Trả tiền mặt
+        TX->>HT: Xác nhận đã nhận đủ tiền
     end
 
-    KH->>HT: Gửi đánh giá & Phản hồi về chuyến đi (Rating/Comment)
+    KH->>HT: Gửi đánh giá & phản hồi
+    HT->>HT: Lưu đánh giá vào hệ thống
 ```
+
+### 6.3. Tổng quan quy trình nghiệp vụ
+
+**Quy trình CAB tổng thể:**
+
+> **Đặt xe → Tìm tài xế → Phân công tài xế → Tài xế đến điểm đón → Đón khách → Thực hiện chuyến → Hoàn thành → Tính cước → Thanh toán → Đánh giá**
+
+### 6.4. Các bên tham gia chính
+
+| Actor               | Hoạt động chính                                                                       |
+| :------------------ | :------------------------------------------------------------------------------------ |
+| **Khách hàng**      | Đặt xe, theo dõi chuyến, thanh toán và đánh giá.                                      |
+| **Tài xế**          | Nhận/từ chối chuyến, cập nhật trạng thái, gửi vị trí và xác nhận thanh toán tiền mặt. |
+| **Hệ thống CAB**    | Xử lý đặt xe, tìm tài xế, phân công, theo dõi chuyến, tính cước và gửi thông báo.     |
+| **Cổng Thanh toán** | Xử lý và xác nhận giao dịch thanh toán điện tử.                                       |
