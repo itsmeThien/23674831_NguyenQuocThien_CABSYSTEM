@@ -323,49 +323,30 @@ graph LR
 | **AC06** | Xử lý Thanh toán Lỗi (Payment Failure) | Khách hàng chọn Ví điện tử nhưng tài khoản không đủ số dư hoặc lỗi kết nối. | Cổng thanh toán trả về kết quả `FAILED`. | • Hệ thống hiển thị thông báo lỗi thanh toán trên App Khách hàng.<br>• Cho phép Khách chọn phương thức thay thế (*Chuyển sang Tiền mặt* hoặc *Ví khác*).<br>• Chuyển trạng thái `COMPLETED` chỉ sau khi xác nhận thanh toán thành công. |
 | **AC07** | Can thiệp Hủy chuyến kẹt (Admin Intervention) | Chuyến đi bị rớt kết nối GPS > 3 phút, hiển thị cảnh báo trên màn hình Admin. | Nhân viên vận hành chọn chuyến đi, nhập lý do và nhấn **"Hủy chuyến thủ công"**. | • Trạng thái chuyến chuyển lập tức sang `CANCELLED`.<br>• Giải phóng trạng thái cho Khách hàng để đặt chuyến mới.<br>• Tự động lưu chi tiết hành động can thiệp vào `Audit Log`. |
 
-## 13. Requirements Traceability Matrix (Bảng Truy vết Yêu cầu)
+## 13. Traceability Matrix (Bảng Truy vết Nghiệp vụ & Kỹ thuật)
 
-| Business Requirement | Functional Requirement | Business Rule | Use Case / Chức năng |
-|---|---|---|---|
-| BR01 | FR01, FR17 | BRULE10 | Quản lý tài khoản & lịch sử |
-| BR02 | FR01, FR02 | BRULE01, BRULE04 | Quản lý tài xế |
-| BR03 | FR03, FR04 | BRULE15 | Đặt xe |
-| BR04 | FR04, FR05 | BRULE01 | Xác định vị trí & tìm tài xế |
-| BR05 | FR06, FR07, FR08 | BRULE02, BRULE03 | Tự động điều phối |
-| BR06 | FR05, FR08 | BRULE14 | Không tìm thấy tài xế |
-| BR07 | FR06, FR07 | BRULE01, BRULE02 | Tiếp nhận chuyến |
-| BR08 | FR10 | BRULE06 | Cập nhật tiến trình chuyến |
-| BR09 | FR04, FR11 | BRULE13 | Theo dõi chuyến đi |
-| BR10 | FR12 | BRULE05 | Tính cước phí |
-| BR11 | FR13 | BRULE07, BRULE08 | Thanh toán |
-| BR12 | FR14 | BRULE07 | Xử lý thanh toán thất bại |
-| BR13 | FR15 | BRULE13 | Thông báo |
-| BR14 | FR18 | BRULE11, BRULE12 | Giám sát vận hành |
-| BR15 | FR20 | BRULE10, BRULE11 | Phân quyền |
-| BR16 | FR19 | BRULE12 | Báo cáo & thống kê |
-| BR17 | FR16 | BRULE09 | Đánh giá dịch vụ |
-
-### 13.1. Truy vết Functional Requirement → Non-Functional Requirement
-
-| Functional Requirement | Non-Functional Requirement liên quan |
-|---|---|
-| FR01 – Đăng ký & Đăng nhập | NFR05, NFR06, NFR07, NFR11 |
-| FR02 – Quản lý Tài xế | NFR05, NFR06, NFR11 |
-| FR03 – Tạo yêu cầu Đặt xe | NFR01, NFR02, NFR11 |
-| FR04 – Xác định Vị trí | NFR01, NFR10, NFR15 |
-| FR05 – Tìm kiếm Tài xế | NFR01, NFR02, NFR15 |
-| FR06 – Gửi yêu cầu nhận chuyến | NFR01, NFR03, NFR10 |
-| FR07 – Xử lý phản hồi Tài xế | NFR01, NFR04 |
-| FR08 – Tự động chuyển tiếp chuyến | NFR01, NFR03, NFR04 |
-| FR09 – Xác nhận Chuyến đi | NFR01, NFR04 |
-| FR10 – Cập nhật Trạng thái chuyến | NFR01, NFR04, NFR15 |
-| FR11 – Theo dõi Chuyến đi | NFR01, NFR02, NFR10, NFR15 |
-| FR12 – Tính Cước phí | NFR01, NFR04 |
-| FR13 – Thanh toán | NFR04, NFR05, NFR07, NFR10 |
-| FR14 – Xử lý Thanh toán thất bại | NFR03, NFR04, NFR13 |
-| FR15 – Gửi Thông báo | NFR01, NFR03, NFR10 |
-| FR16 – Đánh giá Dịch vụ | NFR04, NFR11 |
-| FR17 – Quản lý Lịch sử | NFR04, NFR05, NFR07, NFR13 |
-| FR18 – Giám sát Vận hành | NFR01, NFR05, NFR06, NFR14 |
-| FR19 – Báo cáo & Thống kê | NFR01, NFR08 |
-| FR20 – Phân quyền & Ghi Log | NFR05, NFR06, NFR07, NFR14 |
+| Mã BG | Tên Mục tiêu Kinh doanh | Mã BR | Mã Module | Mã FR | Mã UC | Mã AC |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **BG01** | Tự động hóa & Mở rộng Vận hành | **BR02** | **MOD02** | **FR02.2** | UC02 | **AC-FR02.2** |
+| | | | | **FR02.4** | UC08 | **AC-FR02.4** |
+| **BG02** | Tối ưu Doanh thu & Chuyến đi | **BR02** | **MOD02** | **FR02.1** | UC02 | **AC-FR02.1** |
+| | | | | **FR02.3** | UC08 | **AC-FR02.3** |
+| | | **BR03** | **MOD03** | **FR03.3** | UC06 | **AC-FR03.3** |
+| **BG03** | Nâng cao Trải nghiệm Khách hàng | **BR03** | **MOD03** | **FR03.1** | UC09 | **AC-FR03.1** |
+| | | | | **FR03.2** | UC03 | **AC-FR03.2** |
+| | | | | **FR03.4** | UC03 | **AC-FR03.4** |
+| | | **BR04** | **MOD04** | **FR04.3** | UC04 | **AC-FR04.3** |
+| | | | | **FR04.4** | UC04 | **AC-FR04.4** |
+| **BG04** | Tối ưu Hiệu quả cho Tài xế | **BR01** | **MOD01** | **FR01.3** | UC01 | **AC-FR01.3** |
+| | | **BR02** | **MOD02** | **FR02.3** | UC07, UC08 | **AC-FR02.3** |
+| | | **BR04** | **MOD04** | **FR04.1** | UC09 | **AC-FR04.1** |
+| | | | | **FR04.2** | UC04 | **AC-FR04.2** |
+| **BG05** | Nâng cao Năng lực Quản trị | **BR01** | **MOD01** | **FR01.4** | UC01 | **AC-FR01.4** |
+| | | **BR05** | **MOD06** | **FR06.1** | UC10 | **AC-FR06.1** |
+| | | | | **FR06.2** | UC11 | **AC-FR06.2** |
+| | | **BR06** | **MOD06** | **FR06.3** | UC12 | **AC-FR06.3** |
+| | | | | **FR06.4** | UC05 | **AC-FR06.4** |
+| **BG06** | Kiến trúc Nền tảng Linh hoạt | **BR01** | **MOD01** | **FR01.1** | UC01 | **AC-FR01.1** |
+| | | | | **FR01.2** | UC01 | **AC-FR01.2** |
+| | | **BR04** | **MOD05** | **FR05.1** | UC03, UC09 | **AC-FR05.1** |
+| | | | | **FR05.2** | UC01 | **AC-FR05.2** |
