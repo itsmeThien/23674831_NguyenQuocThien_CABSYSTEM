@@ -137,3 +137,28 @@ flowchart TD
     IssueInvoice --> Rating[Khách hàng đánh giá & phản hồi chất lượng dịch vụ]
     Rating --> EndTrip([Kết thúc chuyến đi])
 ```
+
+## 7. Functional Requirements
+
+| ID | Functional Requirement | Description |
+|---|---|---|
+| FR01 | Account Management | The system shall allow users to register, log in, log out, and update personal information. |
+| FR02 | User Authorization | The system shall provide role-based access for Customer, Driver, and Operator. |
+| FR03 | Ride Booking | The system shall allow customers to enter pickup and destination locations and request a ride. |
+| FR04 | Driver Location | The system shall determine and display the current location of customers and drivers using GPS. |
+| FR05 | Driver Matching | The system shall automatically find available drivers suitable for the ride request. |
+| FR06 | Driver Assignment | The system shall send a ride request to a suitable available driver. |
+| FR07 | Driver Response | The system shall record whether the driver accepts, rejects, or does not respond to the ride request. |
+| FR08 | Request Forwarding | The system shall forward the ride request to the next suitable driver when the current driver rejects or times out. |
+| FR09 | Ride Confirmation | The system shall confirm the ride and provide driver information to the customer after acceptance. |
+| FR10 | Trip Management | The system shall update the trip status throughout the ride process. |
+| FR11 | Real-time Tracking | The system shall allow customers to track the driver's location and ETA in real time. |
+| FR12 | Fare Calculation | The system shall automatically calculate the total fare according to current pricing rules. |
+| FR13 | Payment | The system shall support cash and electronic payment methods. |
+| FR14 | Payment Confirmation | The system shall record the payment status after a successful or failed transaction. |
+| FR15 | Notification | The system shall send notifications to customers and drivers for important ride events. |
+| FR16 | Rating | The system shall allow customers to rate and provide feedback after completing a ride. |
+| FR17 | Ride History | The system shall store and allow users to view their ride and payment history. |
+| FR18 | Operation Monitoring | The system shall allow operators to monitor active rides and handle ride-related issues. |
+| FR19 | Reporting | The system shall provide reports on revenue, rides, cancellations, and driver performance. |
+| FR20 | System Logging | The system shall record important activities related to accounts, rides, and payments. |
