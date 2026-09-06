@@ -193,4 +193,132 @@ flowchart TD
 | **NFR05** | **Tính Dễ sử dụng (Usability)** | • Giao diện di động tối ưu cho thao tác 1 tay, thân thiện trên cả 2 nền tảng iOS và Android.<br>• Hiển thị thông báo trạng thái rõ ràng, hỗ trợ ngôn ngữ Tiếng Việt và Tiếng Anh. |
 
 ---
+## 10. Data modeling 
+**Mô hình Dữ liệu ERD**
 
+```mermaid
+erDiagram
+    USERS ||--o{ TRIPS : "places (Customer)"
+    USERS ||--o| DRIVER_PROFILES : "has profile (Driver)"
+    DRIVER_PROFILES ||--o| VEHICLES : "drives"
+    DRIVER_PROFILES ||--o{ TRIPS : "accepts (Driver)"
+    TRIPS ||--|| PAYMENTS : "generates"
+    TRIPS ||--o| RATINGS : "receives"
+
+    USERS {
+        bigint id PK
+        string phone_number
+        string password_hash
+        string full_name
+        string email
+        string role "CUSTOMER / DRIVER / OPERATOR / ADMIN"
+        string status "ACTIVE / INACTIVE / BLOCKED"
+        timestamp created_at
+    }
+
+    DRIVER_PROFILES {
+        bigint id PK
+        bigint user_id FK
+        string license_number
+        string identity_card_number
+        string status "OFFLINE / READY / ON_TRIP / SUSPENDED"
+        decimal rating_avg
+        timestamp created_at
+    }
+
+    VEHICLES {
+        bigint id PK
+        bigint driver_id FK
+        string license_plate
+        string vehicle_type "4-SEATER / 7-SEATER / BIKE"
+        string model
+        string color
+    }
+
+    TRIPS {
+        bigint id PK
+        bigint customer_id FK
+        bigint driver_id FK
+        string pickup_address
+        decimal pickup_lat
+        decimal pickup_lng
+        string dropoff_address
+        decimal dropoff_lat
+        decimal dropoff_lng
+        decimal fare_amount
+        string status "PENDING / ACCEPTED / ARRIVED / IN_PROGRESS / COMPLETED / CANCELLED"
+        timestamp created_at
+        timestamp completed_at
+    }
+
+    PAYMENTS {
+        bigint id PK
+        bigint trip_id FK
+        decimal amount
+        string payment_method "CASH / E_WALLET / CREDIT_CARD"
+        string payment_status "PENDING
+```
+## 11. Use Cases 
+*** Use Case Diagram
+
+```mermaid
+graph LR
+    actor KH as Khách hàng
+    actor TX as Tài xế
+    actor NVVH as Nhân viên Vận hành
+
+    subgraph CAB_System [Hệ thống CAB System]
+        %% Khách hàng Use Cases
+        UC01(UC01: Đăng ký / Đăng nhập)
+        UC02(UC02: Tạo yêu cầu Đặt xe)
+        UC03(UC03: Theo dõi Chuyến đi & ETA)
+        UC04(UC04: Thanh toán Chuyến đi)
+        UC05(UC05: Đánh giá & Phản hồi)
+        UC06(UC06: Hủy chuyến đi)
+
+        %% Tài xế Use Cases
+        UC07(UC07: Bật/Tắt Trạng thái Sẵn sàng)
+        UC08(UC08: Nhận / Từ chối Chuyến)
+        UC09(UC09: Cập nhật Trạng thái Tiến trình)
+        
+        %% Admin / Operator Use Cases
+        UC10(UC10: Giám sát Chuyến đi Real-time)
+        UC11(UC11: Can thiệp & Xử lý Sự cố)
+        UC12(UC12: Xem Báo cáo & Thống kê)
+    end
+
+    %% Mối quan hệ Khách hàng
+    KH --> UC01
+    KH --> UC02
+    KH --> UC03
+    KH --> UC04
+    KH --> UC05
+    KH --> UC06
+
+    %% Mối quan hệ Tài xế
+    TX --> UC01
+    TX --> UC07
+    TX --> UC08
+    TX --> UC09
+    TX --> UC06
+
+    %% Mối quan hệ NVVH
+    NVVH --> UC01
+    NVVH --> UC10
+    NVVH --> UC11
+    NVVH --> UC12
+```
+---
+## 12. Acceptance Criteria (Tiêu chí Chấp nhận - AC)
+
+### 12.1. Bảng Tiêu chí Chấp nhận theo Module
+
+| AC ID | Feature / Use Case | Given (Điều kiện tiên quyết) | When (Hành động kích hoạt) | Then (Kết quả kỳ vọng) |
+| :--- | :--- | :--- | :--- | :--- |
+| **AC01** | Đặt xe & Phân công (Booking) | Khách hàng nhập đủ Điểm đón, Điểm đến, Phương thức thanh toán hợp lệ. | Khách hàng nhấn nút **"Đặt xe"**. | • Chuyến đi tạo ở trạng thái `PENDING`.<br>• Gửi đề xuất tới Tài xế gần nhất trong bán kính 3km (đếm ngược 15s).<br>• Khi Tài xế bấm "Chấp nhận", chuyến đổi sang `ACCEPTED`, hiển thị thông tin Tài xế cho Khách. |
+| **AC02** | Xử lý Timeout Tài xế (Matching Timeout) | Tài xế nhận thông báo đề xuất chuyến kèm đồng hồ đếm ngược 15 giây. | Tài xế không thao tác (Chấp nhận/Từ chối) sau **15 giây**. | • Hệ thống ghi nhận "Từ chối do Timeout".<br>• Tự động chuyển tiếp yêu cầu đặt xe tới Tài xế tiếp theo.<br>• Tài xế cũ không nhận lại thông báo cho chính chuyến đi đó trong lượt tìm kiếm này. |
+| **AC03** | Khách hàng Hủy chuyến (Cancel Booking) | Chuyến đi ở trạng thái `ACCEPTED` (Tài xế đang đến đón) < 2 phút. | Khách hàng nhấn nút **"Hủy chuyến"** và chọn lý do. | • Trạng thái chuyến chuyển sang `CANCELLED`.<br>• Miễn phí phạt hủy chuyến.<br>• Gửi Push Notification thông báo Khách đã hủy chuyến tới App Tài xế. |
+| **AC04** | Theo dõi Real-time & ETA | Chuyến đi ở trạng thái `IN_PROGRESS` (Đang di chuyển). | App Tài xế gửi tọa độ GPS định kỳ mỗi **3 - 5 giây**. | • Biểu tượng xe Tài xế di chuyển mượt mà trên bản đồ App Khách hàng.<br>• Thời gian dự kiến đến (ETA) và khoảng cách tự động tính toán & cập nhật liên tục. |
+| **AC05** | Thanh toán Điện tử (E-Payment) | Chuyến đi hoàn thành, Khách hàng chọn phương thức thanh toán "Ví điện tử". | Tài xế nhấn **"Hoàn thành chuyến đi"**. | • Hệ thống tự động trừ tiền qua Cổng thanh toán.<br>• Khi trả về `SUCCESS`, chuyến chuyển sang `COMPLETED`, `payment_status` = `SUCCESS`.<br>• Xuất Hóa đơn điện tử gửi về App Khách và thông báo "Đã nhận tiền" cho Tài xế. |
+| **AC06** | Xử lý Thanh toán Lỗi (Payment Failure) | Khách hàng chọn Ví điện tử nhưng tài khoản không đủ số dư hoặc lỗi kết nối. | Cổng thanh toán trả về kết quả `FAILED`. | • Hệ thống hiển thị thông báo lỗi thanh toán trên App Khách hàng.<br>• Cho phép Khách chọn phương thức thay thế (*Chuyển sang Tiền mặt* hoặc *Ví khác*).<br>• Chuyển trạng thái `COMPLETED` chỉ sau khi xác nhận thanh toán thành công. |
+| **AC07** | Can thiệp Hủy chuyến kẹt (Admin Intervention) | Chuyến đi bị rớt kết nối GPS > 3 phút, hiển thị cảnh báo trên màn hình Admin. | Nhân viên vận hành chọn chuyến đi, nhập lý do và nhấn **"Hủy chuyến thủ công"**. | • Trạng thái chuyến chuyển lập tức sang `CANCELLED`.<br>• Giải phóng trạng thái cho Khách hàng để đặt chuyến mới.<br>• Tự động lưu chi tiết hành động can thiệp vào `Audit Log`. |
