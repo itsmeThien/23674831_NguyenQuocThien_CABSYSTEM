@@ -82,83 +82,58 @@ quadrantChart
 
 ## 6. Business Process Modeling (Mô hình hóa Quy trình Nghiệp vụ)
 
-### 6.1. Quy trình Đặt xe và Phân công Tài xế
+### 6.1. Luồng Đặt xe & Điều phối Tự động
 
 ```mermaid
-sequenceDiagram
-    autonumber
-    actor KH as Khách hàng
-    participant HT as Hệ thống CAB
-    actor TX as Tài xế
+flowchart TD
+    Start([Khách hàng mở app & Nhập thông tin chuyến đi]) --> Request[Gửi yêu cầu đặt xe]
+    Request --> FindDriver[Hệ thống xác định vị trí GPS & Tìm tài xế gần nhất đang sẵn sàng]
+    
+    FindDriver --> CheckFound{Có tài xế phù hợp?}
+    
+    CheckFound -- Không --> NotifyNoDriver[Thông báo không tìm thấy tài xế phù hợp]
+    NotifyNoDriver --> EndNoDriver([Kết thúc luồng đặt xe])
 
-    KH->>HT: Tạo yêu cầu đặt xe (Điểm đón, Điểm đến, Loại xe)
-    HT->>HT: Xác định tọa độ
-    HT->>HT: Tìm kiếm tài xế gần nhất đang sẵn sàng
+    CheckFound -- Có --> SendOffer[Gửi thông báo nhận chuyến cho Tài xế - Có đếm ngược thời gian]
+    
+    SendOffer --> DriverResponse{Tài xế phản hồi?}
+    
+    DriverResponse -- Chấp nhận --> ConfirmBooking[Hệ thống xác nhận chuyến đi & Gửi thông tin tài xế cho Khách hàng]
+    ConfirmBooking --> Transition[Chuyển sang Luồng Thực hiện chuyến đi]
 
-    alt Tìm thấy tài xế
-        HT->>TX: Gửi thông báo nhận chuyến (có đếm ngược)
-
-        alt Tài xế chấp nhận
-            TX-->>HT: Xác nhận nhận chuyến
-            HT-->>KH: Thông báo đặt xe thành công & thông tin tài xế
-        else Tài xế từ chối / Hết thời gian
-            TX-->>HT: Từ chối / Timeout
-            HT->>HT: Chuyển yêu cầu tới tài xế tiếp theo
-        end
-
-    else Không tìm thấy tài xế
-        HT-->>KH: Thông báo không tìm thấy tài xế phù hợp
-    end
+    DriverResponse -- Từ chối / Hết giờ --> ForwardNext[Tự động chuyển tiếp yêu cầu tới tài xế tiếp theo]
+    ForwardNext --> CheckFound
 ```
 
-### 6.2. Quy trình Thực hiện chuyến, Thanh toán và Đánh giá
-
+### 6.2. Quy trình Thực hiện Chuyến đi & Thanh toán
 ```mermaid
-sequenceDiagram
-    autonumber
-    actor KH as Khách hàng
-    actor TX as Tài xế
-    participant HT as Hệ thống CAB
-    participant TT as Cổng Thanh toán
-
-    TX->>HT: Cập nhật trạng thái "Đã đến điểm đón"
-    HT-->>KH: Thông báo tài xế đã tới
-
-    TX->>HT: Cập nhật "Đã đón khách / Đang di chuyển"
-
-    loop Cập nhật vị trí thời gian thực
-        TX->>HT: Gửi tọa độ GPS hiện tại
-        HT-->>KH: Hiển thị vị trí tài xế & ETA
+flowchart TD
+    Transition([Bắt đầu thực hiện chuyến đi]) --> DriverArrive[Tài xế cập nhật: Đã đến điểm đón]
+    DriverArrive --> NotifyArrived[Hệ thống gửi thông báo cho Khách hàng]
+    
+    NotifyArrived --> StartTrip[Tài xế cập nhật: Đã đón khách / Đang di chuyển]
+    
+    subgraph RealTimeTracking [Quá trình di chuyển]
+        StartTrip --> GPSUpdate[Tài xế gửi tọa độ GPS liên tục]
+        GPSUpdate --> ShowETA[Hệ thống cập nhật vị trí & ETA real-time cho Khách hàng]
     end
 
-    TX->>HT: Cập nhật "Hoàn thành chuyến đi"
-    HT->>HT: Tự động tính tổng cước phí
-    HT-->>KH: Thông báo cước phí & phương thức thanh toán
+    ShowETA --> FinishTrip[Tài xế cập nhật: Hoàn thành chuyến đi]
+    FinishTrip --> CalcFare[Hệ thống tự động tính tổng cước phí]
+    CalcFare --> ShowFare[Hiển thị cước phí & Lựa chọn thanh toán]
 
-    alt Thanh toán điện tử
-        KH->>TT: Thực hiện thanh toán
-        TT-->>HT: Xác nhận thanh toán thành công
-        HT-->>KH: Gửi hóa đơn điện tử
-    else Thanh toán tiền mặt
-        KH->>TX: Trả tiền mặt
-        TX->>HT: Xác nhận đã nhận đủ tiền
-    end
+    ShowFare --> PaymentMethod{Phương thức thanh toán?}
 
-    KH->>HT: Gửi đánh giá & phản hồi
-    HT->>HT: Lưu đánh giá vào hệ thống
+    PaymentMethod -- Thanh toán Điện tử --> Gateway[Gửi yêu cầu tới Cổng thanh toán]
+    Gateway --> CheckPay{Thanh toán thành công?}
+    CheckPay -- Có --> IssueInvoice[Hệ thống gửi hóa đơn điện tử]
+    CheckPay -- Lỗi --> RetryPay[Xử lý lại / Yêu cầu chuyển sang tiền mặt]
+    RetryPay --> PaymentMethod
+
+    PaymentMethod -- Tiền mặt --> CashPay[Khách hàng trả tiền mặt cho Tài xế]
+    CashPay --> ConfirmCash[Tài xế xác nhận đã nhận đủ tiền]
+    ConfirmCash --> IssueInvoice
+
+    IssueInvoice --> Rating[Khách hàng đánh giá & phản hồi chất lượng dịch vụ]
+    Rating --> EndTrip([Kết thúc chuyến đi])
 ```
-
-### 6.3. Tổng quan quy trình nghiệp vụ
-
-**Quy trình CAB tổng thể:**
-
-> **Đặt xe → Tìm tài xế → Phân công tài xế → Tài xế đến điểm đón → Đón khách → Thực hiện chuyến → Hoàn thành → Tính cước → Thanh toán → Đánh giá**
-
-### 6.4. Các bên tham gia chính
-
-| Actor               | Hoạt động chính                                                                       |
-| :------------------ | :------------------------------------------------------------------------------------ |
-| **Khách hàng**      | Đặt xe, theo dõi chuyến, thanh toán và đánh giá.                                      |
-| **Tài xế**          | Nhận/từ chối chuyến, cập nhật trạng thái, gửi vị trí và xác nhận thanh toán tiền mặt. |
-| **Hệ thống CAB**    | Xử lý đặt xe, tìm tài xế, phân công, theo dõi chuyến, tính cước và gửi thông báo.     |
-| **Cổng Thanh toán** | Xử lý và xác nhận giao dịch thanh toán điện tử.                                       |
