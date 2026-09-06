@@ -1,63 +1,59 @@
-flowchart TB
-    Customer["Khách hàng"]
-    Driver["Tài xế"]
-    Operator["Nhân viên vận hành"]
+# Software Requirements Specification (SRS) - CAB System
 
-    CAB["CAB System<br/>Nền tảng đặt xe"]
+## 1. Stakeholder List & Roles (Danh sách & Vai trò Bên liên quan)
 
-    Booking["Đặt xe"]
-    Dispatch["Tìm và phân công tài xế"]
-    Trip["Thực hiện và theo dõi chuyến"]
-    Fare["Tính cước"]
-    Payment["Thanh toán"]
-    Notification["Thông báo"]
-    Rating["Đánh giá"]
+| Stakeholder | Vai trò chính |
+| :--- | :--- |
+| **Ban Giám đốc** | Ra quyết định chiến lược, duyệt ngân sách và phê duyệt các quy tắc nghiệp vụ. |
+| **Khách hàng** | Đặt xe, theo dõi chuyến đi, thanh toán và đánh giá chất lượng dịch vụ. |
+| **Tài xế** | Bật trạng thái sẵn sàng, nhận/từ chối chuyến và cập nhật tiến trình chuyến đi. |
+| **Nhân viên vận hành** | Theo dõi hệ thống, hỗ trợ xử lý sự cố chuyến đi và quản trị dữ liệu. |
+| **Business Analyst (BA)** | Làm rõ yêu cầu chưa chốt và chi tiết hóa quy trình nghiệp vụ cho team. |
+| **Nhóm Phát triển (Dev/QA)** | Thiết kế kiến trúc, lập trình và hoàn thiện hệ thống trong 7 tuần. |
+| **Đối tác Thanh toán & Thông báo** | Tích hợp xử lý giao dịch điện tử và gửi thông báo tức thì đến người dùng. |
 
-    Admin["Quản trị vận hành"]
-    Report["Báo cáo và phân tích"]
+---
 
-    PaymentGateway["Cổng thanh toán bên ngoài"]
-    MapService["Dịch vụ bản đồ và định vị"]
-    NotificationProvider["Nhà cung cấp thông báo"]
+## 2. Stakeholder Matrix (Ma trận Bên liên quan)
 
-    Customer --> Booking
-    Customer --> Trip
-    Customer --> Payment
-    Customer --> Rating
+```mermaid
+quadrantChart
+    title Ma trận Stakeholder (Power vs Interest)
+    x-axis "Mức độ quan tâm Thấp" --> "Mức độ quan tâm Cao"
+    y-axis "Quyền lực / Ảnh hưởng Thấp" --> "Quyền lực / Ảnh hưởng Cao"
+    quadrant-1 "Quản lý chặt chẽ (Manage Closely)"
+    quadrant-2 "Thỏa mãn nhu cầu (Keep Satisfied)"
+    quadrant-3 "Theo dõi tối thiểu (Monitor)"
+    quadrant-4 "Cung cấp thông tin (Keep Informed)"
+    
+    "Ban Giam doc": [0.85, 0.90]
+    "Business Analyst": [0.75, 0.70]
+    "Nhom Phat trien": [0.80, 0.60]
+    "Doi tac Thanh toan": [0.35, 0.75]
+    "Doi tac Thong bao": [0.30, 0.65]
+    "Khach hang": [0.85, 0.35]
+    "Tai xe": [0.80, 0.30]
+    "Nhan vien Van hanh": [0.70, 0.40]
+```
 
-    Driver --> Dispatch
-    Driver --> Trip
-    Driver --> Notification
+---
 
-    Operator --> Admin
-    Operator --> Report
+## 3. Business Goals (Mục tiêu Kinh doanh)
 
-    Booking --> Dispatch
-    Dispatch --> Trip
-    Trip --> Fare
-    Fare --> Payment
-    Trip --> Notification
-    Payment --> Notification
-    Trip --> Rating
+* **BG01:** Tự động hóa quy trình phân công tài xế và tối ưu hóa vận hành nhằm giảm thiểu sự can thiệp thủ công, sẵn sàng mở rộng quy mô hệ thống phục vụ lượng lớn khách hàng và tài xế trong tương lai.
+* **BG0c:** Nâng cao doanh thu, tỷ lệ hoàn thành chuyến đi và giảm tỷ lệ hủy chuyến thông qua việc tối ưu cơ chế đề xuất, ghép nối tài xế gần nhất theo thời gian thực.
+* **BG03:** Tăng cường trải nghiệm và độ hài lòng của khách hàng bằng việc minh bạch hóa thông tin trạng thái chuyến đi, vị trí tài xế, thời gian dự kiến đến và đa dạng hóa phương thức thanh toán an toàn.
+* **BG04:** Tăng hiệu quả hoạt động và thu nhập cho tài xế nhờ cơ chế thông báo nhận chuyến chủ động, minh bạch tiến trình chuyến đi và quy trình hỗ trợ vận hành rõ ràng.
+* **BG05:** Nâng cao năng lực quản trị, hỗ trợ và xử lý sự cố kịp thời thông qua hệ thống theo dõi trực quan, phân quyền chặt chẽ và công cụ báo cáo hoạt động chuyên sâu.
+* **BG06:** Xây dựng kiến trúc nền tảng ổn định, bảo mật cao, có khả năng mở rộng độc lập và linh hoạt tích hợp/bổ sung các loại hình dịch vụ, đối tác thanh toán hay thông báo mới trong tương lai mà không ảnh hưởng tới hệ thống đang chạy.
 
-    Dispatch --> MapService
-    Payment --> PaymentGateway
-    Notification --> NotificationProvider
+---
 
-    Booking --> CAB
-    Dispatch --> CAB
-    Trip --> CAB
-    Payment --> CAB
-    Admin --> CAB
+## 4. Minimum Viable Product (MVP) Modules
 
-    classDef actor fill:#eef2ff,stroke:#818cf8
-    classDef core fill:#f0fdf4,stroke:#4ade80
-    classDef admin fill:#fff7ed,stroke:#fb923c
-    classDef external fill:#ecfeff,stroke:#22d3ee
-    classDef platform fill:#f5f3ff,stroke:#a78bfa
-
-    class Customer,Driver,Operator actor
-    class Booking,Dispatch,Trip,Fare,Payment,Notification,Rating core
-    class Admin,Report admin
-    class PaymentGateway,MapService,NotificationProvider external
-    class CAB platform
+1. **Module Quản lý Tài khoản & Định danh (Account & Auth Module):** Đăng ký, đăng nhập, quản lý hồ sơ (Khách hàng, Tài xế) và phân quyền quản trị (Nhân viên vận hành).
+2. **Module Đặt xe & Phân công (Booking & Matching Module):** Tạo chuyến, định vị thời gian thực, thuật toán tự động ghép nối/tìm tài xế gần nhất và xử lý chuyển tiếp khi từ chối.
+3. **Module Quản lý Tiến trình Chuyến đi (Trip Management Module):** Cập nhật/theo dõi trạng thái chuyến đi theo thời gian thực (ETA, vị trí), lịch sử chuyến và đánh giá tài xế.
+4. **Module Tính cước & Thanh toán (Pricing & Payment Module):** Tính tiền tự động, hỗ trợ tiền mặt và tích hợp Payment Gateway bên ngoài xử lý thanh toán điện tử.
+5. **Module Thông báo (Notification Module):** Gửi thông báo tức thì cho Khách hàng/Tài xế theo từng sự kiện của chuyến đi.
+6. **Module Vận hành & Báo cáo (Admin & Analytics Module):** Giao diện quản trị theo dõi chuyến đi, hỗ trợ xử lý sự cố và xuất báo cáo doanh thu, hiệu suất cho Ban giám đốc.
