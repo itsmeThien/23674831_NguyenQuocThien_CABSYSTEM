@@ -79,3 +79,64 @@ quadrantChart
 | **BR15** | Phân quyền Quản trị | Hệ thống áp dụng cơ chế phân quyền truy cập chặt chẽ để hạn chế Nhân viên vận hành thông thường thực hiện các thao tác quản trị nhạy cảm.|
 | **BR16** | Báo cáo Thống kê Quản trị | Hệ thống cung cấp báo cáo thống kê cho Ban Giám đốc về tổng số chuyến, doanh thu, tỷ lệ hoàn thành/hủy chuyến và hiệu quả hoạt động của Tài xế.|
 | **BR17** | Đánh giá Dịch vụ | Hệ thống cho phép Khách hàng thực hiện đánh giá (rating/comment) chất lượng Tài xế sau khi hoàn thành chuyến đi.|
+
+## 6. Business Process Modeling (Mô hình hóa Quy trình Nghiệp vụ)
+
+### 6.1. Quy trình Đặt xe & Điều phối Tự động
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor KH as Khách hàng
+    participant HT as Hệ thống CAB
+    actor TX as Tài xế
+
+    KH->>HT: Tạo yêu cầu đặt xe (Điểm đón, Điểm đến, Loại xe)
+    HT->>HT: Xác định tọa độ & Tìm kiếm tài xế gần nhất đang sẵn sàng
+    
+    alt Tìm thấy tài xế
+        HT->>TX: Gửi thông báo nhận chuyến (có đếm ngược thời gian)
+        alt Tài xế chấp nhận
+            TX-->>HT: Xác nhận nhận chuyến
+            HT-->>KH: Thông báo đặt xe thành công & Thông tin tài xế
+        else Tài xế từ chối / Hết thời gian phản hồi
+            TX-->>HT: Từ chối / Timeout
+            HT->>HT: Tự động chuyển tiếp yêu cầu tới tài xế tiếp theo
+        end
+    else Không tìm thấy tài xế
+        HT-->>KH: Thông báo không tìm thấy tài xế phù hợp
+    end
+```
+### 6.2. Quy trình Thực hiện Chuyến đi & Thanh toán
+```
+sequenceDiagram
+    autonumber
+    actor KH as Khách hàng
+    actor TX as Tài xế
+    participant HT as Hệ thống CAB
+    participant TT as Cổng Thanh toán (Payment Gateway)
+
+    TX->>HT: Cập nhật trạng thái "Đã đến điểm đón"
+    HT-->>KH: Thông báo tài xế đã tới
+    TX->>HT: Cập nhật trạng thái "Đã đón khách / Đang di chuyển"
+    
+    loop Cập nhật thời gian thực
+        TX->>HT: Gửi tọa độ GPS hiện tại
+        HT-->>KH: Hiển thị vị trí tài xế & ETA trên bản đồ
+    end
+
+    TX->>HT: Cập nhật "Hoàn thành chuyến đi"
+    HT->>HT: Tự động tính tổng cước phí chuyến đi
+    HT-->>KH: Thông báo cước phí & Phương thức thanh toán
+
+    alt Thanh toán Điện tử
+        KH->>TT: Thực hiện thanh toán qua Cổng thanh toán
+        TT-->>HT: Xác nhận thanh toán thành công
+        HT-->>KH: Gửi hóa đơn điện tử
+    else Thanh toán Tiền mặt
+        KH->>TX: Trả tiền mặt trực tiếp
+        TX->>HT: Xác nhận đã nhận đủ tiền mặt
+    end
+
+    KH->>HT: Gửi đánh giá & Phản hồi về chuyến đi (Rating/Comment)
+```
