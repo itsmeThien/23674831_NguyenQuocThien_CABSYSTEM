@@ -25,7 +25,6 @@ quadrantChart
     quadrant-3 "Theo dõi tối thiểu (Monitor)"
     quadrant-4 "Cung cấp thông tin (Keep Informed)"
     
-    "Ban Giam doc": [0.85, 0.90]
     "Business Analyst": [0.75, 0.70]
     "Nhom Phat trien": [0.80, 0.60]
     "Doi tac Thanh toan": [0.35, 0.75]
