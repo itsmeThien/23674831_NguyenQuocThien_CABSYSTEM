@@ -195,7 +195,6 @@ flowchart TD
 ---
 ## 10. Data modeling 
 **Mô hình Dữ liệu ERD**
-
 ```mermaid
 erDiagram
     USERS ||--o{ TRIPS : "places (Customer)"
@@ -211,8 +210,8 @@ erDiagram
         string password_hash
         string full_name
         string email
-        string role "CUSTOMER / DRIVER / OPERATOR / ADMIN"
-        string status "ACTIVE / INACTIVE / BLOCKED"
+        string role
+        string status
         timestamp created_at
     }
 
@@ -221,7 +220,7 @@ erDiagram
         bigint user_id FK
         string license_number
         string identity_card_number
-        string status "OFFLINE / READY / ON_TRIP / SUSPENDED"
+        string status
         decimal rating_avg
         timestamp created_at
     }
@@ -230,7 +229,7 @@ erDiagram
         bigint id PK
         bigint driver_id FK
         string license_plate
-        string vehicle_type "4-SEATER / 7-SEATER / BIKE"
+        string vehicle_type
         string model
         string color
     }
@@ -246,7 +245,7 @@ erDiagram
         decimal dropoff_lat
         decimal dropoff_lng
         decimal fare_amount
-        string status "PENDING / ACCEPTED / ARRIVED / IN_PROGRESS / COMPLETED / CANCELLED"
+        string status
         timestamp created_at
         timestamp completed_at
     }
@@ -255,36 +254,50 @@ erDiagram
         bigint id PK
         bigint trip_id FK
         decimal amount
-        string payment_method "CASH / E_WALLET / CREDIT_CARD"
-        string payment_status "PENDING
+        string payment_method
+        string payment_status
+        string transaction_id
+        timestamp paid_at
+    }
+
+    RATINGS {
+        bigint id PK
+        bigint trip_id FK
+        int score
+        text comment
+        timestamp created_at
+    }
 ```
+---
+
 ## 11. Use Cases 
 *** Use Case Diagram
 
 ```mermaid
 graph LR
-    actor KH as Khách hàng
-    actor TX as Tài xế
-    actor NVVH as Nhân viên Vận hành
+    %% Khai báo Actors
+    KH["👤 Khách hàng"]
+    TX["🚗 Tài xế"]
+    NVVH["💻 Nhân viên Vận hành"]
 
     subgraph CAB_System [Hệ thống CAB System]
         %% Khách hàng Use Cases
-        UC01(UC01: Đăng ký / Đăng nhập)
-        UC02(UC02: Tạo yêu cầu Đặt xe)
-        UC03(UC03: Theo dõi Chuyến đi & ETA)
-        UC04(UC04: Thanh toán Chuyến đi)
-        UC05(UC05: Đánh giá & Phản hồi)
-        UC06(UC06: Hủy chuyến đi)
+        UC01("(UC01: Đăng ký / Đăng nhập)")
+        UC02("(UC02: Tạo yêu cầu Đặt xe)")
+        UC03("(UC03: Theo dõi Chuyến đi & ETA)")
+        UC04("(UC04: Thanh toán Chuyến đi)")
+        UC05("(UC05: Đánh giá & Phản hồi)")
+        UC06("(UC06: Hủy chuyến đi)")
 
         %% Tài xế Use Cases
-        UC07(UC07: Bật/Tắt Trạng thái Sẵn sàng)
-        UC08(UC08: Nhận / Từ chối Chuyến)
-        UC09(UC09: Cập nhật Trạng thái Tiến trình)
+        UC07("(UC07: Bật/Tắt Trạng thái Sẵn sàng)")
+        UC08("(UC08: Nhận / Từ chối Chuyến)")
+        UC09("(UC09: Cập nhật Trạng thái Tiến trình)")
         
         %% Admin / Operator Use Cases
-        UC10(UC10: Giám sát Chuyến đi Real-time)
-        UC11(UC11: Can thiệp & Xử lý Sự cố)
-        UC12(UC12: Xem Báo cáo & Thống kê)
+        UC10("(UC10: Giám sát Chuyến đi Real-time)")
+        UC11("(UC11: Can thiệp & Xử lý Sự cố)")
+        UC12("(UC12: Xem Báo cáo & Thống kê)")
     end
 
     %% Mối quan hệ Khách hàng
