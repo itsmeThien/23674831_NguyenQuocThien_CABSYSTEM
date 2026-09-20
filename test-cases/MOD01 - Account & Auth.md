@@ -4,7 +4,7 @@
 
 | Test Case ID | Test Scenario | Test Case | Preconditions | Test Steps | Test Data | Expected Result | Priority |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TC-REG-001 | Đăng ký tài khoản bằng SĐT + OTP | Gửi mã OTP thành công với SĐT hợp lệ chưa đăng ký | Đang ở màn hình Đăng ký | 1. Mở màn hình Đăng ký<br>2. Nhập SĐT<br>3. Nhấn 'Gửi mã OTP' | SĐT: 0901234567 | Hệ thống gửi OTP qua SMS thành công trong vòng 5 giây; hiển thị màn hình nhập OTP | High |
+| TC-REG-001 | Đăng ký tài khoản bằng SĐT + OTP | Gửi mã OTP thành công với SĐT hợp lệ chưa đăng ký | Đang ở màn hình Đăng ký | 1. Mở màn hình Đăng ký<br>2. Nhập SĐT<br>3. Nhấn 'Gửi mã OTP' | SĐT: 0933557281 | Hệ thống gửi OTP qua SMS thành công trong vòng 5 giây; hiển thị màn hình nhập OTP | High |
 | TC-REG-002 | Đăng ký tài khoản bằng SĐT + OTP | Xác thực OTP hợp lệ và tạo tài khoản Customer | OTP đã được gửi tới thiết bị | 1. Nhập mã OTP<br>2. Nhấn 'Xác nhận' | SĐT: 0901234567<br>OTP: 482913 | Xác thực thành công; tạo user role=CUSTOMER, status=ACTIVE; trả về JWT Token và vào giao diện Khách hàng | High |
 | TC-REG-003 | Đăng ký tài khoản bằng SĐT + OTP | Đăng ký tài khoản Tài xế và điều hướng đúng giao diện Driver | Người dùng chọn vai trò Tài xế | 1. Chọn vai trò 'Tài xế'<br>2. Nhập SĐT<br>3. Gửi OTP<br>4. Nhập OTP đúng | SĐT: 0912345678<br>Role: DRIVER<br>OTP: 771204 | Tạo user role=DRIVER; điều hướng vào màn hình hoàn thiện hồ sơ Tài xế | High |
 | TC-REG-004 | Đăng ký tài khoản bằng SĐT + OTP | Gửi lại mã OTP sau khi hết hiệu lực | OTP trước đó đã hết hạn | 1. Chờ OTP hết hạn<br>2. Nhấn 'Gửi lại mã'<br>3. Nhập mã mới | SĐT: 0901234567<br>OTP mới: 335120 | Mã OTP mới được gửi và xác thực thành công; mã cũ bị vô hiệu hóa | Medium |
